@@ -1,9 +1,8 @@
 package poo.gestaodeleilao;
 
-import poo.gestaodecontas.Lance;
 import poo.gestaodecontas.Lote;
+import poo.gestaodecontas.Lance;
 import poo.gestaodecontas.Pessoa;
-
 import java.util.ArrayList;
 
 public class Leilao {
@@ -21,16 +20,16 @@ public class Leilao {
         return this.ativo;
     }
 
-    public void setAtivo(boolean encerrado) {
-        this.ativo = encerrado;
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
-    public void adicionaLote(String descricao) {
-        this.lotes.adicionaLote(descricao);
+    public void adicionaLote(String descricao, double valorMinimo) {
+        this.lotes.adicionaLote(descricao, valorMinimo);
     }
 
-    public Lote removeLote(int numero) {
-        return this.lotes.removeLote(numero);
+    public Lote removeLote(int idLote) {
+        return this.lotes.removeLote(idLote);
     }
 
     public int quantidadeDeLotes() {
@@ -51,8 +50,7 @@ public class Leilao {
         }
         return "Lote no: " + lote.getNumero() + "("
                 + lote.getDescricao() + ")"
-
-                + "Atualmente tem um lance de: "
+                + " Atualmente tem um lance de: "
                 + lote.getMaiorLance().getValor();
     }
 
@@ -60,58 +58,40 @@ public class Leilao {
         ArrayList<Lote> lotes = this.lotes.getTodosOsLotes();
         StringBuilder todosOsLotes = new StringBuilder();
         for (Lote lote : lotes) {
-            todosOsLotes.append(lote.toString())
-                    .append("\n");
+            todosOsLotes.append(lote.toString()).append("\n");
         }
         return todosOsLotes.toString();
     }
 
-    public class Leilao {
-        private List<Lote> lotes;
-
-        public Leilao(List<Lote> lotes) {
-            this.lotes = lotes;
-        }
-
-        public String encerraLeilao() {
-            StringBuilder resultado = new StringBuilder();
-            ArrayList<Lote> todosLotes = this.lotes.getTodosOsLotes();
-            for (Lote lote : todosLotes) {
-                resultado.append("Lote número: ").append(lote.getNumero()).append("\n");
-                resultado.append("Descrição: ").append(lote.getDescricao()).append("\n");
-                Lance maiorLance = lote.getMaiorLance();
-                if (maiorLance != null) {
-                    resultado.append("Vendido para: ")
-                            .append(maiorLance.getLicitante().getNome())
-                            .append(" por R$ ")
-                            .append(String.format("%.2f", maiorLance.getValor()))
-                            .append("\n");
-                } else {
-                    resultado.append("Lote não foi vendido.\n");
-                }
-                resultado.append("\n");
+    public String encerraLeilao() {
+        StringBuilder resultado = new StringBuilder();
+        ArrayList<Lote> todosLotes = this.lotes.getTodosOsLotes();
+        for (Lote lote : todosLotes) {
+            resultado.append("Lote número: ").append(lote.getNumero()).append("\n");
+            resultado.append("Descrição: ").append(lote.getDescricao()).append("\n");
+            Lance maiorLance = lote.getMaiorLance();
+            if (maiorLance != null) {
+                resultado.append("Vendido para: ")
+                        .append(maiorLance.getLicitante().getNome())
+                        .append(" por R$ ")
+                        .append(String.format("%.2f", maiorLance.getValor()))
+                        .append("\n");
+            } else {
+                resultado.append("Lote não foi vendido.\n");
             }
-            return resultado.toString();
+            resultado.append("\n");
         }
-
-        public String encerraLeilao() {
-            StringBuilder resultado = new StringBuilder();
-            ArrayList<Lote> todosLotes = this.lotes.getTodosOsLotes();
-            for (Lote lote : todosLotes) {
-                resultado.append("Lote número: ").append(lote.getNumero()).append("\n");
-                resultado.append("Descrição: ").append(lote.getDescricao()).append("\n");
-                Lance maiorLance = lote.getMaiorLance();
-                if (maiorLance != null) {
-                    resultado.append("Vendido para: ")
-                            .append(maiorLance.getLicitante().getNome())
-                            .append(" por R$ ")
-                            .append(String.format("%.2f", maiorLance.getValor()))
-                            .append("\n");
-                } else {
-                    resultado.append("Lote não foi vendido.\n");
-                }
-                resultado.append("\n");
-            }
-            return resultado.toString();
-        }
+        return resultado.toString();
     }
+
+    public ArrayList<Lote> getNaoVendidos() {
+        ArrayList<Lote> naoVendidos = new ArrayList<>();
+        ArrayList<Lote> todosLotes = this.lotes.getTodosOsLotes();
+        for (Lote lote : todosLotes) {
+            if (lote.getMaiorLance() == null) {
+                naoVendidos.add(lote);
+            }
+        }
+        return naoVendidos;
+    }
+}

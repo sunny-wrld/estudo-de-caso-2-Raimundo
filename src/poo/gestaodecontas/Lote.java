@@ -5,42 +5,40 @@ public class Lote {
     private String descricao;
     private double valorMinimo;
     private Lance maiorLance;
+
     public Lote(int numero, String descricao, double valorMinimo) {
         this.numero = numero;
         this.descricao = descricao;
         this.valorMinimo = valorMinimo;
+        this.maiorLance = null;
     }
+
     public int getNumero() {
-        return this.numero;
+        return numero;
     }
+
     public String getDescricao() {
-        return this.descricao;
+        return descricao;
     }
+
+    public double getValorMinimo() {
+        return valorMinimo;
+    }
+
     public Lance getMaiorLance() {
-        return this.maiorLance;
+        return maiorLance;
     }
-    public boolean lancePara(Pessoa licitante, double valor) {
-        if (valor >= this.valorMinimo &&
-                (this.maiorLance == null || (this.maiorLance.getValor() < valor))) {
-            this.maiorLance = new Lance(licitante, valor);
+
+    public boolean lancePara(Pessoa pessoa, double valor) {
+        if (valor >= valorMinimo && (maiorLance == null || valor > maiorLance.getValor())) {
+            maiorLance = new Lance(pessoa, valor);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
+
+    @Override
     public String toString() {
-        StringBuilder lote = new StringBuilder();
-        lote.append("Lote numero: ")
-                .append(this.numero)
-                .append("\n")
-                .append(this.descricao);
-        Lance melhorLance = this.getMaiorLance();
-        if (melhorLance != null) {
-            lote.append(" Lance: " + melhorLance.getValor());
-        } else {
-            lote.append(" (Nenhum Lance)");
-        }
-        lote.append("\n");
-        return lote.toString();
+        return "Lote " + numero + ": " + descricao + " (mínimo: R$" + valorMinimo + ")";
     }
 }
